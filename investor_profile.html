@@ -1,0 +1,303 @@
+<?php
+session_start();
+$sessData = !empty($_SESSION['sessData'])?$_SESSION['sessData']:'';
+if(!empty($sessData['status']['msg'])){
+    $statusMsg = $sessData['status']['msg'];
+    $statusMsgType = $sessData['status']['type'];
+    unset($_SESSION['sessData']['status']);
+}
+?>
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Create Investor profile</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/log.css" rel="stylesheet">
+	
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->        
+    
+  <!-- jQuery -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- IE10 viewport bug workaround -->
+	<script src="js/ie10-viewport-bug-workaround.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<!-- Placeholder Images -->
+	<script src="js/holder.min.js"></script>  
+	
+	
+<script type="text/javascript">
+		
+		$(document).ready(function(){
+			$.getJSON('checkprofile.php', function(data) {
+                        $.each(data, function(key, val) {
+								if(val.result=="true")
+								{
+									alert("you have a profile");
+									$("#form1").hide();
+									$('#have_profile').show();
+									document.getElementById("dis_pro").innerHTML="Display Profile Here";
+								}
+								if(val.result=="false")
+								{
+									alert("you do not have a profile");
+									$("#form1").show();
+								}
+                        });
+                });
+			$("#form1").submit(function(){
+				
+				$.get("investor.php",
+							{name:$("#name").val(),
+							pastinvest:$("#pastinvest").val(),
+							sector:$("#sector").val(),
+							location:$("#location").val(),
+							org:$("#org").val(),
+							desc:$("#desc").val(),
+							}).done(function(data){			
+							});
+			});		
+});	
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+                
+
+        });
+
+	</script>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Logo and responsive toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="index.html" >Stories</a>
+                    </li>
+                    <li>
+                        <a href="news.html">News</a>
+                    </li>
+                    <li>
+                        <a href="events.html">Events</a>
+                    </li>
+                   <li>
+						<a href="profiles.html">Profiles</a>
+                    </li>
+                    <li>
+                        <a href="investors.html" >Investors</a>
+                    </li>
+                
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Get Involved  <span class="caret"></span></a>
+						<ul class="dropdown-menu" aria-labelledby="about-us">
+							<li><a href="#">Get a Job</a></li>
+							<li><a href="#">Give a Job</a></li>
+							
+						</ul>
+					</li>
+                </ul>
+
+				<!-- Search -->
+				
+				<form class="navbar-form navbar-right" role="search">
+	
+                
+				<?php
+				if(!empty($sessData['userLoggedIn']) && !empty($sessData['userID'])){
+				include 'login/user.php';
+				$user = new User();
+				$conditions['where'] = array(
+					'id' => $sessData['userID'],
+				);
+				$conditions['return_type'] = 'single';
+				$userData = $user->getRows($conditions);
+
+				?>
+				
+				<ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <strong><?php echo $userData['fname'];?></strong>
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="navbar-login">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p class="text-center">
+                                            <span class="glyphicon glyphicon-user icon-size"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-left"><strong><?php echo $userData['fname'].' '.$userData['lname']; ?></strong></p>
+                                        <p class="text-left small"><?php echo $userData['email']; ?></p>
+                                        
+										<?php if($userData['type']=="User"){?>
+										<p class="text-left">
+                                            <a href="user_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Investor"){?>
+										<p class="text-left">
+                                            <a href="investor_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Startup"){?>
+										<p class="text-left">
+                                            <a href="startup_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider navbar-login-session-bg"></li>
+                         <li><a href="#">Account Settings<span class="glyphicon glyphicon-cog pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="#"><?php echo $userData['type'];?><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">Messages <span class="badge pull-right"> 42 </span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">Favourites Snippets <span class="glyphicon glyphicon-heart pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="login/userAccount.php?logoutSubmit=1" class="logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+                    </ul>
+                </li>
+            </ul>  
+
+				<?php }else{ ?>
+                <ul class="nav navbar-nav navbar-right" style="height:10px; margin-top: -7px">
+					<li class="dropdown"><a href="login/index.php"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+           
+					</li>
+				</ul>
+                <?php }?>    
+                    
+				</form>
+				
+				
+				
+				</div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	<form id="have_profile" style="display:none"><h1 id="dis_pro"></h1></form>
+<form id="form1" style="display:none">
+<div class="row">
+	<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="panel panel-primary" style="margin:20px;">
+				<div class="panel-heading" style="background-color: #99ccff; color: #fff">
+					<h3 class="panel-title" ><b>Create your investors profile</b></h3>
+				</div>
+				<div class="panel-body" >
+    
+<div class="col-md-12 col-sm-12" style="color: black" >
+    
+    <div class="col-md-12 col-sm-12" id="addblock">
+	
+	<div class="form-group">
+            <label for="iname">Investors Name</label>
+            <input type="text" class="form-control input-sm" id="name" required  placeholder="Your name" >
+        </div>
+        
+        
+	   
+	    <div class="form-group">
+            <label for="Pin">Past investments</label>
+            <textarea class="form-control input-sm" id="pastinvest" required placeholder="Enter past investments"></textarea>
+        </div>
+	    <div class="form-group">
+	      <label for="location" >Location</label>
+	      <input type="text" class="form-control input-sm" id="location" required rows="3" placeholder="Location of organization" >
+	    </div>
+        <div class="form-group">
+	      <label for="organization">Organization</label>
+	      <input type="text" class="form-control input-sm" id="org" required rows="3" placeholder="Name of organization">
+	    </div>
+        <div class="form-group">
+	      <label for="sector">Sector</label>
+	      <input type="text" class="form-control input-sm" id="sector"  required rows="3" placeholder="Enter sector">
+	    </div>
+        <div class="form-group">
+	      <label for="description">Description</label>
+	      <textarea class="form-control input-sm" id="desc" rows="3" required placeholder="Enter description"></textarea>
+	    </div>
+        
+<div class="col-md-12 col-sm-12" id="addblock">
+	<div class="form-group">
+		<input type='submit'  style="background-color: #99ccff; color: black; width:100px; border-color:#99ccff" class="btn btn-primary"  value="Submit" id="add"/>
+	</div>
+    
+    
+</div>
+
+</div>
+        </div>
+</form>
+</div>
+</div>
+		</div>
+</div>	
+
+	<footer>
+		<div class="footer-blurb" style="background-color:silver">
+			<div class="container" >
+				<div class="row" >
+					<div class="col-sm-4 footer-blurb-item">
+						
+					</div>
+					
+
+				</div>
+				<!-- /.row -->	
+			</div>
+        </div>
+        
+	</footer>
+<script type="text/javascript" src="myscripts/profile_scripts.js"></script>
+
+	
+</body>
+
+</html>

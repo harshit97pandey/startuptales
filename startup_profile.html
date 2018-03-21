@@ -1,0 +1,383 @@
+<?php
+session_start();
+$sessData = !empty($_SESSION['sessData'])?$_SESSION['sessData']:'';
+if(!empty($sessData['status']['msg'])){
+    $statusMsg = $sessData['status']['msg'];
+    $statusMsgType = $sessData['status']['type'];
+    unset($_SESSION['sessData']['status']);
+}
+?>
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Create startup profile</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/log.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->        
+    
+  <!-- jQuery -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- IE10 viewport bug workaround -->
+	<script src="js/ie10-viewport-bug-workaround.js"></script>
+	
+	<!-- Placeholder Images -->
+	<script src="js/holder.min.js"></script>
+	<style type="text/css">
+
+    /* Formatting search box */
+    .search-box{
+        width: 300px;
+        position: relative;
+        display: inline-block;
+        font-size: 14px;
+    }
+    .search-box input[type="text"]{
+        height: 32px;
+        padding: 5px 10px;
+        border: 1px solid #CCCCCC;
+        font-size: 14px;
+    }
+    .result {
+        position: absolute;        
+        z-index: 999;
+        top: 100%;
+        left: 0;
+		background-color:grey;
+    }
+	
+    
+	.search-box input[id="search_sector"]{
+        width: 100%;
+        box-sizing: border-box;
+    }
+    /* Formatting result items */
+    .result p{
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid #CCCCCC;
+        border-top: none;
+        cursor: pointer;
+		
+    }
+	
+	
+    .result p:hover{
+        background: #f2f2f2;
+    }
+	
+</style>
+<script>
+	
+					
+		
+		var sector_array=[];
+		$(document).ready(function(){
+		
+		$('.search-box input[id="search_sector"]').on("keyup input", function(){
+        var term = $(this).val();
+        var resultDropdown = $(this).siblings(".result");
+        if(term.length){
+            $.get("backend-search_sector.php", {query: term}).done(function(data){
+				
+                resultDropdown.html(data);
+				//alert(data);
+            });
+        } else{
+            resultDropdown.empty();
+        }
+		});
+		
+		$.getJSON('checkprofile.php', function(data) {
+                        $.each(data, function(key, val) {
+								if(val.result=="true")
+								{
+									alert("you have a profile");
+									$("#form1").show();
+									$('#form2').hide();
+									$("#dis_startup").show();
+									document.getElementById("dis_startup").innerHTML="Display Profile Here";
+								}
+								if(val.result=="false")
+								{
+									alert("you do not have a profile");
+									$("#form2").show();
+									$("#form1").hide();
+								}
+                        });
+                });
+		
+		
+    $("#form2").submit(function(){
+        
+		$.get("retrive.php",
+					{oname:$("#oname").val(),
+					established:$("#eyear").val(),
+					location:$("#location").val(),
+					obj:$("#objectives").val(),
+					miles:$("#milestone").val(),
+					story:$("#story").val(),
+					investor:$("#investor").val(),
+					sector_array:sector_array
+					}).done(function(data){
+					
+					alert(data);
+					
+					});
+					
+			
+    });
+	
+	$(document).on("click", ".result p", function(){
+        $(this).parents(".search-box").find('input[id="search_sector"]').val($(this).text());
+		sector_array.push($(this).text());
+        $(this).parent(".result").empty();
+		sector_array.toString();
+		document.getElementById("demo3").innerHTML = sector_array;
+		$('#search_skill').val("");$('#search_cert').val("");$('#search_sector').val("");
+		});
+	
+});
+			
+					
+	</script>	
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Logo and responsive toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="index.html" >Stories</a>
+                    </li>
+                    <li>
+                        <a href="news.html">News</a>
+                    </li>
+                    <li>
+                        <a href="events.html">Events</a>
+                    </li>
+                   <li>
+						<a href="profiles.html">Profiles</a>
+                    </li>
+                    <li>
+                        <a href="investors.html" >Investors</a>
+                    </li>
+                
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Get Involved  <span class="caret"></span></a>
+						<ul class="dropdown-menu" aria-labelledby="about-us">
+							<li><a href="#">Get a Job</a></li>
+							<li><a href="#">Give a Job</a></li>
+							
+						</ul>
+					</li>
+                </ul>
+
+				<!-- Search -->
+				<!-- Search -->
+						
+						
+						<form class="navbar-form navbar-right" role="search">
+	
+                
+				<?php
+				if(!empty($sessData['userLoggedIn']) && !empty($sessData['userID'])){
+				include 'login/user.php';
+				$user = new User();
+				$conditions['where'] = array(
+					'id' => $sessData['userID'],
+				);
+				$conditions['return_type'] = 'single';
+				$userData = $user->getRows($conditions);
+				?>
+				<ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <strong><?php echo $userData['fname'];?></strong>
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="navbar-login">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p class="text-center">
+                                            <span class="glyphicon glyphicon-user icon-size"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-left"><strong><?php echo $userData['fname'].' '.$userData['lname']; ?></strong></p>
+                                        <p class="text-left small"><?php echo $userData['email']; ?></p>
+                                        
+										<?php if($userData['type']=="User"){?>
+										<p class="text-left">
+                                            <a href="user_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Investor"){?>
+										<p class="text-left">
+                                            <a href="investor_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Startup"){?>
+										<p class="text-left">
+                                            <a href="startup_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider navbar-login-session-bg"></li>
+                         <li><a href="#">Account Settings<span class="glyphicon glyphicon-cog pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="#"><?php echo $userData['type'];?><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">Messages <span class="badge pull-right"> 42 </span></a></li>
+            <li class="divider"></li>
+            <li><a href="#">Favourites Snippets <span class="glyphicon glyphicon-heart pull-right"></span></a></li>
+            <li class="divider"></li>
+            <li><a href="login/userAccount.php?logoutSubmit=1" class="logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+                    </ul>
+                </li>
+            </ul>  
+
+				<?php }else{ ?>
+                <ul class="nav navbar-nav navbar-right" style="height:10px; margin-top: -7px">
+					<li class="dropdown"><a href="login/index.php"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+           
+					</li>
+				</ul>
+                <?php }?>    
+                    
+				</form>	
+						
+						
+			</div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+<form id="form1" style="display:none"><h1 id="dis_startup"></h1></form>
+
+
+
+	<form id="form2" style="display:none">
+<div class="row">
+	<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading" style="background-color: #99ccff; color: #fff">
+					<h3 class="panel-title" ><b>Create your startup profile</b></h3>
+				</div>
+	<div class="panel-body" >
+	
+
+	<div class="col-md-12 col-sm-12" style="color: black" >
+ 
+    <div class="col-md-12 col-sm-12" id="addblock">
+
+
+        <div class="form-group">
+            <label for="eyear">Established Year</label>
+            <input type="date" class="form-control input-sm" id="eyear"  required placeholder="Year of Establishment">
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" class="form-control input-sm" id="location" required  placeholder="Organization location">
+        </div>
+     
+	    <div class="search-box">
+			<input id="search_sector" autocomplete="off" placeholder="Search Sector" />
+			<div class="result"></div>
+			<p id="demo3"></p>
+		</div>
+        
+	    <div class="form-group">
+            <label for="objectives">Objectives</label>
+            <textarea class="form-control input-sm" id="objectives" required  placeholder="Organization objectives"></textarea>
+		<br>
+            <label for="milestone">Milestone</label>
+            <textarea class="form-control input-sm datepicker" id="milestone" required  placeholder="Objectives milestone"></textarea>
+  
+        <br>
+	      <label for="story" >Story</label>
+	      <textarea class="form-control input-sm" id="story" required  placeholder="Establishment story" ></textarea>
+	 
+        <br>
+	      <label for="investors">Investors</label>
+	      <textarea class="form-control input-sm" id="investor" required  placeholder="Enter investors"></textarea>
+	    </div>
+    </div> 
+<div class="col-md-12 col-sm-12" id="addblock">
+
+	<div class="form-group col-md-3 col-sm-3">
+		<input type='submit' style="background-color: #99ccff; color: black; width:100px; border-color:#99ccff" class="btn btn-primary" name="submit" value="Submit" id="add"/>
+	</div>
+    
+    
+</div>
+
+</div>
+        </div>
+</form>
+</div>
+</div>
+	<footer>
+		<div class="footer-blurb" style="background-color:white">
+			<div class="container" >
+				<div class="row" >
+					<div class="col-sm-4 footer-blurb-item">
+						
+					</div>
+					
+
+				</div>
+				<!-- /.row -->	
+			</div>
+        </div>
+        
+       
+	</footer>
+
+	
+</body>
+
+</html>

@@ -1,0 +1,325 @@
+<?php
+session_start();
+$sessData = !empty($_SESSION['sessData'])?$_SESSION['sessData']:'';
+if(!empty($sessData['status']['msg'])){
+    $statusMsg = $sessData['status']['msg'];
+    $statusMsgType = $sessData['status']['type'];
+    unset($_SESSION['sessData']['status']);
+}
+?>
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Events</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/log.css" rel="stylesheet">      
+    <link href="events_css/style.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+	<script src="js/holder.min.js"></script>  
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <!-- Logo and responsive toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="index.html" >Stories</a>
+                    </li>
+                    <li>
+                        <a href="news.html">News</a>
+                    </li>
+                    <li class="active">
+                        <a href="events.html">Events</a>
+                    </li>
+                   <li >
+						<a href="search_companies.html">Profiles</a>
+                    </li>
+                    <li >
+                        <a href="investors.html" >Investor Corner</a>
+                    </li>
+                
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Get Involved  <span class="caret"></span></a>
+						<ul class="dropdown-menu" aria-labelledby="about-us">
+							
+							<li><a href="give_a_job.html">Find a teammate</a></li>
+							<li><a href="http://www.startupindia.gov.in/">Startup India</a></li>
+							
+						</ul>
+					</li>
+                </ul>
+
+				<!-- Search -->
+				<form class="navbar-form navbar-right" role="search">
+					
+                   <?php
+				if(!empty($sessData['userLoggedIn']) && !empty($sessData['userID'])){
+				include 'login/user.php';
+				$user = new User();
+				$conditions['where'] = array(
+					'id' => $sessData['userID'],
+				);
+				$conditions['return_type'] = 'single';
+				$userData = $user->getRows($conditions);
+				?>
+				<ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <strong><?php echo $userData['fname'];?></strong>
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="navbar-login">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p class="text-center">
+                                            <span class="glyphicon glyphicon-user icon-size"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-left"><strong><?php echo $userData['fname'].' '.$userData['lname']; ?></strong></p>
+                                        <p class="text-left small"><?php echo $userData['email']; ?></p>
+                                        <p class="text-left">
+                                            <a href="#" class="btn btn-primary btn-block btn-sm">Profile</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+            <li><a href="#"><?php echo "You are logged in as ".$userData['type'];?><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+            
+           
+            <li><a href="login/userAccount.php?logoutSubmit=1" class="logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+                    </ul>
+                </li>
+            </ul>  
+
+				<?php }else{ ?>
+                <ul class="nav navbar-nav navbar-right" style="height:10px; margin-top: -7px">
+					<li class="dropdown"><a href="login/index.php"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+           
+					</li>
+				</ul>
+                <?php }?>    
+                     
+                
+                    
+				</form>
+			</div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	
+
+        
+
+
+    <!-- Content -->
+    <!-- <div class="container">
+
+    <h2 class="display-1">Events</h2>
+
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/3.jpg">
+        <div class="card-block">
+            <h3 class="card-title">TechKriti</h3>
+            <hr>
+            <p class="card-text"><h5>The Biggest Event of IIT Kanpur.</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="https://www.techkriti.org/competitions/#/Home" target="new_blank" class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div>
+
+<hr>
+
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/SheCEO-Twitter.png">
+        <div class="card-block">
+            <h3 class="card-title">#SheCEO</h3>
+            <hr>
+            <p class="card-text"><h5>Women Entrepreneuship</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="http://cashkaro.com/page/womens-day" target="new_blank"class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div>
+<hr>
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/laravellive.png">
+        <div class="card-block">
+            <h3 class="card-title">The Laravel Conference</h3>
+            <hr>
+            <p class="card-text"><h5>New Delhi.</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="https://laravellive.in/" target="new_blank"class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div>
+<hr>
+
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/Ajeet-Workshop.jpg">
+        <div class="card-block">
+            <h3 class="card-title">Ajeet Khurana FundRaising Workshop</h3>
+            <hr>
+            <p class="card-text"><h5>Mumbai.</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="https://www.townscript.com/e/full-day-workshop-on-pitching-fundraising-by-ajeet-khurana" target="new_blank"class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div> 
+
+
+    </div>-->
+    <!-- /.container -->
+	<h2 class="display-1">Events</h2>
+
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/3.jpg">
+        <div class="card-block">
+            <h3 class="card-title">TechKriti</h3>
+            <hr>
+            <p class="card-text"><h5>The Biggest Event of IIT Kanpur.</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="https://www.techkriti.org/competitions/#/Home" target="new_blank" class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div>
+
+<hr>
+
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/SheCEO-Twitter.png">
+        <div class="card-block">
+            <h3 class="card-title">#SheCEO</h3>
+            <hr>
+            <p class="card-text"><h5>Women Entrepreneuship</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="http://cashkaro.com/page/womens-day" target="new_blank"class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div>
+<hr>
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/laravellive.png">
+        <div class="card-block">
+            <h3 class="card-title">The Laravel Conference</h3>
+            <hr>
+            <p class="card-text"><h5>New Delhi.</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="https://laravellive.in/" target="new_blank"class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div>
+<hr>
+
+<div class="demo-card">
+    <div class="card">
+        
+        <img class="card-img-top" src="images/Ajeet-Workshop.jpg">
+        <div class="card-block">
+            <h3 class="card-title">Ajeet Khurana FundRaising Workshop</h3>
+            <hr>
+            <p class="card-text"><h5>Mumbai.</h5></p>
+            
+        </div>
+        <div class="card-block">
+            <a href="https://www.townscript.com/e/full-day-workshop-on-pitching-fundraising-by-ajeet-khurana" target="new_blank"class="card-link"><h5>GRAB THE ENTRY</h5></a>
+            
+        </div>
+        
+    </div>
+</div>
+	<footer>
+		<div class="footer-blurb" style="background-color:silver">
+			<div class="container" >
+				<div class="row" >
+					<div class="col-sm-4 footer-blurb-item">
+						<div class="footter" > <a href="feed.html">Feedback</a> | <a href="about.html">About Us</a> | <a href="contact.html">Contact Us</a> </div>
+					</div>
+				</div>	
+			</div>
+        </div>
+	</footer>
+ 
+	
+	
+</body>
+
+</html>

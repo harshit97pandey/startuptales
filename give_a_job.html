@@ -1,0 +1,613 @@
+<?php
+session_start();
+$sessData = !empty($_SESSION['sessData'])?$_SESSION['sessData']:'';
+if(!empty($sessData['status']['msg'])){
+    $statusMsg = $sessData['status']['msg'];
+    $statusMsgType = $sessData['status']['type'];
+    unset($_SESSION['sessData']['status']);
+}
+?>
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+    <title>Profile</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/log.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->        
+    
+  <!-- jQuery -->
+    
+	
+	<script src="js/jquery-1.11.3.min.js"></script>
+
+    
+	
+	
+	<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+	<!-- Placeholder Images -->
+	<script src="js/holder.min.js"></script> 
+	
+	
+	
+	<script src="myscripts/script.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- IE10 viewport bug workaround -->
+	<script src="js/ie10-viewport-bug-workaround.js"></script>
+	
+	<!-- Placeholder Images -->
+	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<style type="text/css">
+    body{
+        font-family: Arail, sans-serif;
+    }
+    /* Formatting search box */
+    .search-box{
+        width: 215px;
+        position: relative;
+        display: inline-block;
+        font-size: 14px;
+    }
+    .search-box input[type="text"]{
+        height: 32px;
+        padding: 5px 10px;
+        border: 1px solid #CCCCCC;
+        font-size: 14px;
+    }
+    .result{
+        position: absolute;        
+        z-index: 999;
+        top: 100%;
+        left: 0;
+    }
+    .search-box input[type="text"], .result{
+        width: 100%;
+        box-sizing: border-box;
+    }
+    /* Formatting result items */
+    .result p{
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid #CCCCCC;
+        border-top: none;
+        cursor: pointer;
+		margin-left:15px;
+    }
+    .result p:hover{
+        background: #f2f2f2;
+    }
+</style>
+<style type="text/css">
+	.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: #AFCAFF;
+    transition: 0.3s;
+	height:100px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.content {
+    padding: 2px 16px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+</style>
+<style type="text/css">
+   .media
+    {
+        /*box-shadow:0px 0px 4px -2px #000;*/
+        margin: 20px 0;
+        padding:30px;
+    }
+    .dp
+    {
+        border:10px solid #eee;
+        transition: all 0.2s ease-in-out;*/
+    }
+	.img-circle{-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px}
+    
+</style>
+
+<style>
+      .media-object{
+        height: 64px;
+        width: 64px;
+      }
+      .media{
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        padding: 12px;
+        /*width: 40%;*/
+      }
+      .media-container {
+        padding: 0px;
+        display: none;
+      }
+    </style>
+	<script type="text/javascript">
+		var array_loc=[];
+		var array_sector=[];
+	var array_skill=[];
+	var array_cert=[];
+$(document).ready(function(){
+    
+	var updated_query;
+    /*Item selected of dropdown*/
+	
+    $(document).on("click", ".result p", function(){
+        $(this).parents(".search-box").find('input[id="input"]').val($(this).text());  //assigns the selected value to textfield
+        $(this).parent(".result").empty();												//after selecting value emptied the dropdown
+		//document.getElementById("location_skill_list").innerHTML+=$(this).text();
+		
+		
+		if(document.getElementById("location").checked==true)
+		{
+			array_loc.push($(this).text());
+			//alert(array_loc);
+		}
+		if(document.getElementById("skill").checked==true)
+		{
+			array_skill.push($(this).text());
+			//alert(array_skill);
+		}
+		if(document.getElementById("sector").checked==true)
+		{
+			array_sector.push($(this).text());
+			//alert(array_sector);
+		}
+		if(document.getElementById("certification").checked==true)
+		{
+			array_cert.push($(this).text());
+			//alert(array_cert);
+		}
+		else{}
+		
+    });
+	 /*Item selected of dropdown*/
+	 
+	 /*Search Location*/
+	$('input[id="location"]').click(function(){
+		if ($(this).is(':checked'))
+		{
+		//alert("location");
+		$("#input").val("");
+		  document.getElementById("input").placeholder="Search Location";
+		  document.getElementById("skill").checked=false;	  
+		  document.getElementById("sector").checked=false;	
+		document.getElementById("certification").checked=false;		  
+		  $('.search-box input[id="input"]').on("keyup input", function(){
+			var term = $(this).val();
+			var resultDropdown = $(this).siblings(".result");
+			if(term.length){
+				$.get("search_city.php", {query: term}).done(function(data){
+					resultDropdown.html(data);
+				});
+			} else{
+				resultDropdown.empty();
+			}
+		});
+		  
+		}
+	});
+	/*Search Location*/
+	
+	/*Search Skill*/
+	$('input[id="skill"]').click(function(){
+		if ($(this).is(':checked'))
+		{
+		//alert("skill");
+		 $("#input").val("");
+		  document.getElementById("input").placeholder="Search Skill";
+		  document.getElementById("location").checked=false;
+		   document.getElementById("certification").checked=false;
+		  document.getElementById("sector").checked=false;
+		  $('.search-box input[id="input"]').on("keyup input", function(){
+       
+			var term = $(this).val();
+			var resultDropdown = $(this).siblings(".result");
+			if(term.length){
+				$.get("search_skill.php", {query: term}).done(function(data){
+					resultDropdown.html(data);
+				});
+			} else{
+				resultDropdown.empty();
+			}
+    });
+		}
+	});
+	
+	
+	$('input[id="sector"]').click(function(){
+		if ($(this).is(':checked'))
+		{
+		//alert("skill");
+		 $("#input").val("");
+		  document.getElementById("input").placeholder="Search Sector";
+		  document.getElementById("location").checked=false;
+		   document.getElementById("certification").checked=false;
+		  document.getElementById("skill").checked=false;
+		  $('.search-box input[id="input"]').on("keyup input", function(){
+       
+			var term = $(this).val();
+			var resultDropdown = $(this).siblings(".result");
+			if(term.length){
+				$.get("search_sector.php", {query: term}).done(function(data){
+					resultDropdown.html(data);
+				});
+			} else{
+				resultDropdown.empty();
+			}
+    });
+		}
+	});
+	
+	
+	$('input[id="certification"]').click(function(){
+		if ($(this).is(':checked'))
+		{
+		//alert("skill");
+		 $("#input").val("");
+		  document.getElementById("input").placeholder="Search Certification";
+		  document.getElementById("location").checked=false;
+		  document.getElementById("skill").checked=false;
+		  document.getElementById("sector").checked=false;
+		  $('.search-box input[id="input"]').on("keyup input", function(){
+       
+			var term = $(this).val();
+			var resultDropdown = $(this).siblings(".result");
+			if(term.length){
+				$.get("search_cert.php", {query: term}).done(function(data){
+					resultDropdown.html(data);
+				});
+			} else{
+				resultDropdown.empty();
+			}
+    });
+		}
+	});
+	/*Search Skill*/
+});
+
+	function send_array()
+	{
+				$(".thumbnail2").html("");
+
+				$(".user_details").html("");
+				$.ajax({
+					type: "POST",
+					url: "search_more.php",
+					data: { array_loc:array_loc,array_skill:array_skill,array_cert:array_cert,array_sector:array_sector },  //{Php Var name : JS Var name}
+					dataType: 'json',
+					cache: false,
+					success: function(data)
+					  {     
+						
+						$.each(data, function(key, val) {
+								if(data==null)
+								{
+									var x = document.createElement("H3");
+									var t = document.createTextNode("No match found");
+									x.appendChild(t);
+									document.getElementsByClassName("thumbnail2 ")[0].appendChild(x);
+								}
+								//$('h3').append(val.title);$('p2').append(val.date);$('p1').append(val.name);$('p3').append(val.content);document.getElementById("myImg").src = val.featured_image;
+								var x = document.createElement("IMG");
+								x.setAttribute("src", "http://www.hbc333.com/data/out/190/47199326-profile-pictures.png");
+								document.getElementsByClassName("thumbnail2")[0].appendChild(x);
+								x.setAttribute("style","width:100px;float:left;padding-left:3px;padding-right:32px");
+								
+								var x = document.createElement("H3");
+								var t = document.createTextNode(val.username);
+								x.appendChild(t);
+								document.getElementsByClassName("thumbnail2 ")[0].appendChild(x);
+								
+								
+								
+								
+								var x = document.createElement("P");
+								var t = document.createTextNode(val.fname+' '+val.lname);
+								x.appendChild(t);
+								document.getElementsByClassName(' thumbnail2 ')[0].appendChild(x);
+								
+								
+								var x = document.createElement("P");
+								var t = document.createTextNode(val.city);
+								x.appendChild(t);
+								document.getElementsByClassName(' thumbnail2 ')[0].appendChild(x);
+								x.setAttribute("style","padding-left:100px");
+								
+								var x = document.createElement("P");
+								var t = document.createTextNode(val.phone);
+								x.appendChild(t);
+								document.getElementsByClassName(' thumbnail2 ')[0].appendChild(x);
+								//x.setAttribute("style", "display:none;");
+								x.setAttribute("style","padding-left:100px");
+
+								
+								
+								
+								 var x = document.createElement("INPUT");
+									x.setAttribute("type", "button");
+									x.setAttribute("value", "View");
+									x.setAttribute("class", "btn btn-primary");
+									x.setAttribute("id", val.username);
+									x.setAttribute("onclick", "clicked_view(this.id)");
+									document.getElementsByClassName(' thumbnail2 ')[0].appendChild(x);
+										
+									
+									var x = document.createElement("HR");
+									document.getElementsByClassName(' thumbnail2 ')[0].appendChild(x);
+                        });
+
+						
+
+						//location.reload();
+						return false;
+        }
+
+						});
+						
+						
+						
+					
+	
+	}
+	
+   function clicked_view(id)
+				{
+					alert(id);
+				$.get( "get_user_details.php", { username:id } )
+				  .done(function( data ) {
+					//alert( "Data Loaded: " + data );
+				  });
+
+				}
+
+	</script>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Logo and responsive toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="index.html" >Stories</a>
+                    </li>
+                    <li>
+                        <a href="news.html">News</a>
+                    </li>
+                    <li>
+                        <a href="events.html">Events</a>
+                    </li>
+                   <li >
+						<a href="search_companies.html">Profiles</a>
+                    </li>
+                    <li>
+                        <a href="investors.html" >Investor Corner</a>
+                    </li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Get Involved  <span class="caret"></span></a>
+						<ul class="dropdown-menu" aria-labelledby="about-us">
+							
+							<li><a href="give_a_job.html">Find a teammate</a></li>
+							<li><a href="http://www.startupindia.gov.in/">Startup India</a></li>
+							
+						</ul>
+					</li>
+					
+                </ul>
+				<!-- Search -->
+				<form class="navbar-form navbar-right" role="search">
+				<ul class="nav navbar-nav navbar-right">
+                
+				<?php
+				if(!empty($sessData['userLoggedIn']) && !empty($sessData['userID'])){
+				include 'login/user.php';
+				$user = new User();
+				$conditions['where'] = array(
+					'id' => $sessData['userID'],
+				);
+				$conditions['return_type'] = 'single';
+				$userData = $user->getRows($conditions);
+				?>
+				
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <strong><?php echo $userData['fname'];?></strong>
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="navbar-login">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p class="text-center">
+                                            <span class="glyphicon glyphicon-user icon-size"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-left"><strong><?php echo $userData['fname'].' '.$userData['lname']; ?></strong></p>
+                                        <p class="text-left small"><?php echo $userData['email']; ?></p>
+                                        
+										<?php if($userData['type']=="User"){?>
+										<p class="text-left">
+                                            <a href="user_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Investor"){?>
+										<p class="text-left">
+                                            <a href="investor_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Startup"){?>
+										<p class="text-left">
+                                            <a href="startup_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+            <li><a href="#"><?php echo "You are logged in as ".$userData['type'];?><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+            
+            <li><a href="login/userAccount.php?logoutSubmit=1" class="logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+                    </ul>
+                </li>
+            </ul>  
+
+				<?php }else{ ?>
+                <ul class="nav navbar-nav navbar-right" style="height:10px; margin-top: -7px">
+					<li class="dropdown"><a href="login/index.php"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+           
+					</li>
+				</ul>
+                <?php }?>    
+                    
+				</form>	
+
+				
+				
+			</div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	
+        
+		<?php if(empty($sessData['userLoggedIn']) && empty($sessData['userID'])){?>
+			<h1>You need to login to view/search people profiles</h1>
+		<?php	}else{
+		?>
+
+    <!-- Content -->
+		<center style="font-size:40px">Search By Filter</center> <br>
+		<div id="demo"></div>
+		<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-6">
+					<div class="thumbnail2">
+								
+				
+							</div>
+							<div class="user_details">
+								
+							
+							</div>
+				</div>
+				<div class="col-md-4">
+					<div>
+										<input id="location" type="radio" name="location" value="location">Location<br><br>
+						<input id="skill" type="radio" name="skill" value="skill" >Skill<br><br>
+						<input id="sector" type="radio" name="sector" value="sector" >Sector<br><br>
+						<input id="certification" type="radio" name="certification" value="certification" >Certification<br><br>
+						
+					   <div class="search-box">
+							<input type="text" autocomplete="off" placeholder="Search names" id="input" /><br>
+							<div class="result"></div>
+							<div id="searches"></div>
+							
+						</div>
+						<input type="button" name="apply" value="Apply Filter" onclick="send_array()"></input>
+						<p>*You can use multiple options for single category in filter</p>
+						<p>*You need to check atleast one radio button</p>
+				</div>	
+				</div>
+		</div>
+		<!--<div class="row">
+			<div class="col-md-4 col-sm-4">
+				<div>
+										<input id="location" type="radio" name="location" value="location">Location<br>
+						<input id="skill" type="radio" name="skill" value="skill" >Skill<br>
+						<input id="sector" type="radio" name="sector" value="sector" >Sector<br>
+						<input id="certification" type="radio" name="certification" value="certification" >Certification<br>
+						
+					   <div class="search-box">
+							<input type="text" autocomplete="off" placeholder="Search names" id="input" /><br>
+							<div class="result"></div>
+							<div id="searches"></div>
+							
+						</div>
+						<input type="button" name="apply" value="Apply Filter" onclick="send_array()"></input>
+				</div>
+			</div>
+		
+		
+			<div class="row">
+					<div class="col-sm-1 col-md-2 col-lg-1"></div>
+						<div class="col-sm-8 col-md-9 col-lg-7">
+							<div class="thumbnail2">
+								
+				
+							</div>
+							<div class="user_details">
+							
+							
+							</div>
+					</div>
+			</div>
+	</div>-->
+			
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<?php }?>
+		
+		
+	<footer>
+		<div class="footer-blurb" style="background-color:silver">
+			<div class="container" >
+				<div class="row" >
+					<div class="col-sm-4 footer-blurb-item">
+						<div class="footter" > <a href="feed.html">Feedback</a> | <a href="about.html">About Us</a> | <a href="contact.html">Contact Us</a> </div>
+					</div>
+				</div>	
+			</div>
+        </div>
+	</footer>
+	
+</body>
+
+</html>

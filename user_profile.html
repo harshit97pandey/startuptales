@@ -1,0 +1,562 @@
+<?php
+session_start();
+$sessData = !empty($_SESSION['sessData'])?$_SESSION['sessData']:'';
+if(!empty($sessData['status']['msg'])){
+    $statusMsg = $sessData['status']['msg'];
+    $statusMsgType = $sessData['status']['type'];
+    unset($_SESSION['sessData']['status']);
+}
+
+	if(!empty($sessData['userLoggedIn']) && !empty($sessData['userID'])){
+				include 'login/user.php';
+				$user = new User();
+				$conditions['where'] = array(
+					'id' => $sessData['userID'],
+				);
+				$conditions['return_type'] = 'single';
+				$userData = $user->getRows($conditions);
+
+				/*if(!empty($_POST["save"])) {
+					$conn = mysql_connect("localhost","root","");
+					mysql_select_db("login",$conn);
+					
+		
+				$username=$userData['username'];
+				$itemCount = count($_POST["item_name"]);
+				$itemValues=0;
+				$query = "INSERT INTO skillmap (username,skill_name) VALUES ";
+						$queryValue = "";
+				for($i=0;$i<$itemCount;$i++) {
+					if(!empty($_POST["item_name"][$i])) {
+						$itemValues++;
+						if($queryValue!="") {
+							$queryValue .= ",";
+						}
+						$queryValue .= "('" . $username . "','" . $_POST["item_name"][$i] . "')";
+					}
+				}
+				$sql = $query.$queryValue;
+				if($itemValues!=0) {
+					$result = mysql_query($sql);
+					if(!empty($result)) $message = "Added Successfully.";
+					insertpro($username);
+					}
+				else
+				{
+					$message="failed/////";
+				}
+			}*/
+		}
+		function insertpro($username)
+		{
+			
+			$qualification=$_POST['qualification'];
+			$certification=$_POST['certification'];
+			$sector=$_POST['sector'];
+			$city=$_POST['city'];
+			//echo $username."<br />".$qualification."<br />".$certification."<br />".$sector."<br />".$city;
+			$sql1="insert into userprofile(username,qualification,certification,city,sector)values ('$username','$qualification','$certification','$city','$sector')";
+			$result1 = mysql_query($sql1);
+			if(!empty($result1))
+			{
+
+				echo '<script type="text/javascript">alert("Profile updated successfully");</script>';
+				
+			}
+			else 
+			{
+				echo "failed ";
+			}
+		}
+	
+?>
+<HTML lang="en">
+<HEAD>
+<TITLE>Create user profile</TITLE>
+     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/log.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->        
+    
+  <!-- jQuery -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- IE10 viewport bug workaround -->
+	<script src="js/ie10-viewport-bug-workaround.js"></script>
+	<style type="text/css">
+
+    /* Formatting search box */
+    .search-box{
+        width: 300px;
+        position: relative;
+        display: inline-block;
+        font-size: 14px;
+    }
+    .search-box input[type="text"]{
+        height: 32px;
+        padding: 5px 10px;
+        border: 1px solid #CCCCCC;
+        font-size: 14px;
+    }
+    .result {
+        position: absolute;        
+        z-index: 999;
+        top: 100%;
+        left: 0;
+		background-color:grey;
+    }
+	.result1 {
+        position: absolute;        
+        z-index: 999;
+        top: 100%;
+        left: 0;
+		background-color:grey;
+    }
+	.result2 {
+        position: absolute;        
+        z-index: 999;
+        top: 100%;
+        left: 0;
+		background-color:grey;
+		cursor:pointer;
+    }
+    .search-box input[id="search_skill"], .result{
+        width: 100%;
+        box-sizing: border-box;
+    }
+	 .search-box input[id="search_cert"], .result1{
+        width: 100%;
+        box-sizing: border-box;
+    }
+	.search-box input[id="search_sector"], .result2{
+        width: 100%;
+        box-sizing: border-box;
+    }
+    /* Formatting result items */
+    .result p{
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid #CCCCCC;
+        border-top: none;
+        cursor: pointer;
+		
+    }
+	.result1 p{
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid #CCCCCC;
+        border-top: none;
+        cursor: pointer;
+		
+	.result2 p{
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid #CCCCCC;
+        border-top: none;
+        cursor: pointer;
+		
+    }
+    .result p:hover{
+        background: #f2f2f2;
+    }
+	.result1 p:hover{
+        background: #f2f2f2;
+    }
+	.result2 p:hover{
+        background: #f2f2f2;
+    }
+</style>
+	<!-- Placeholder Images -->
+	<script src="js/holder.min.js"></script>  
+    
+<SCRIPT src="http://code.jquery.com/jquery-2.1.1.js"></SCRIPT>
+<SCRIPT>
+
+var cert_array=[];
+var sector_array=[];
+var skill_array=[];
+
+		$(document).ready(function(){
+					var username = "<?php echo $userData['username']?>";
+
+						$( "form" ).submit(function( event ) {
+						var qual = document.getElementById("qualification").value;
+						var city = document.getElementById("city").value;
+						alert(qual+city+username);
+							$.get( "insert_user_details.php", {username:username, cert_array:cert_array,sector_array:sector_array,skill_array:skill_array,qualification:qual,city:city } ).done(function( data ) {
+									alert(data);
+								  });
+						});
+			$.getJSON('checkprofile.php', function(data) {
+                        $.each(data, function(key, val) {
+								if(val.result=="true")
+								{
+									alert("you have a profile");
+									$("#form1").show();
+									$('#form2').hide();
+									document.getElementById("dis_user").innerHTML="Display Profile Here";
+									
+									
+									
+								}
+								if(val.result=="false")
+								{
+									alert("you do not have a profile");
+									$("#form2").show();
+									$("#form1").hide();
+								}
+                        });
+                });
+			});
+			$(document).ready(function(){
+			
+    $('.search-box input[id="search_skill"]').on("keyup input", function(){
+        var term = $(this).val();
+        var resultDropdown = $(this).siblings(".result");
+        if(term.length){
+            $.get("backend-search.php", {query: term}).done(function(data){
+               
+                resultDropdown.html(data);
+            });
+        } else{
+            resultDropdown.empty();
+        }
+    });
+    
+  
+    $(document).on("click", ".result p", function(){
+        $(this).parents(".search-box").find('input[id="search_skill"]').val($(this).text());
+		skill_array.push($(this).text());
+        $(this).parent(".result").empty();
+		skill_array.toString();
+		document.getElementById("demo").innerHTML = skill_array;
+		$('#search_skill').val("");$('#search_cert').val("");$('#search_sector').val("");
+
+		});
+	
+
+	$('.search-box input[id="search_cert"]').on("keyup input", function(){
+        var term = $(this).val();
+        var result1Dropdown = $(this).siblings(".result1");
+        if(term.length){
+            $.get("backend-search_cert.php", {query: term}).done(function(data){
+				
+                result1Dropdown.html(data);
+				//alert(data);
+            });
+        } else{
+            result1Dropdown.empty();
+        }
+    });
+    
+  
+    $(document).on("click", ".result1 p", function(){
+        $(this).parents(".search-box").find('input[id="search_cert"]').val($(this).text());
+		cert_array.push($(this).text());
+        $(this).parent(".result1").empty();
+		cert_array.toString();
+		document.getElementById("demo2").innerHTML = cert_array;
+		$('#search_skill').val("");$('#search_cert').val("");$('#search_sector').val("");	
+		});
+		
+		
+			$('.search-box input[id="search_sector"]').on("keyup input", function(){
+        var term = $(this).val();
+        var result2Dropdown = $(this).siblings(".result2");
+        if(term.length){
+            $.get("backend-search_sector.php", {query: term}).done(function(data){
+				
+                result2Dropdown.html(data);
+				//alert(data);
+            });
+        } else{
+            result2Dropdown.empty();
+        }
+    });
+    
+  
+    $(document).on("click", ".result2 p", function(){
+        $(this).parents(".search-box").find('input[id="search_sector"]').val($(this).text());
+		sector_array.push($(this).text());
+        $(this).parent(".result2").empty();
+		sector_array.toString();
+		document.getElementById("demo3").innerHTML = sector_array;
+		$('#search_skill').val("");$('#search_cert').val("");$('#search_sector').val("");	
+		});
+  
+});
+</SCRIPT>
+</HEAD>
+<BODY>
+    
+    
+    
+     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Logo and responsive toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="index.html" >Stories</a>
+                    </li>
+                    <li>
+                        <a href="news.html">News</a>
+                    </li>
+                    <li>
+                        <a href="events.html">Events</a>
+                    </li>
+                   <li>
+						<a href="profiles.html">Profiles</a>
+                    </li>
+                    <li>
+                        <a href="investors.html" >Investors</a>
+                    </li>
+                
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Get Involved  <span class="caret"></span></a>
+						<ul class="dropdown-menu" aria-labelledby="about-us">
+							<li><a href="#">Get a Job</a></li>
+							<li><a href="#">Give a Job</a></li>
+							
+						</ul>
+					</li>
+                </ul>
+
+				<!-- Search -->
+				
+				
+				<form class="navbar-form navbar-right" role="search">
+	
+                
+				<?php
+				if(!empty($sessData['userLoggedIn']) && !empty($sessData['userID'])){
+				/*include 'login/user.php';
+				$user = new User();
+				$conditions['where'] = array(
+					'id' => $sessData['userID'],
+				);
+				$conditions['return_type'] = 'single';
+				$userData = $user->getRows($conditions);*/
+				?>
+				<ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <strong><?php echo $userData['fname'];?></strong>
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="navbar-login">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p class="text-center">
+                                            <span class="glyphicon glyphicon-user icon-size"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-left"><strong><?php echo $userData['fname'].' '.$userData['lname']; ?></strong></p>
+                                        <p class="text-left small"><?php echo $userData['email']; ?></p>
+                                        
+										<?php if($userData['type']=="User"){?>
+										<p class="text-left">
+                                            <a href="user_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Investor"){?>
+										<p class="text-left">
+                                            <a href="investor_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Startup"){?>
+										<p class="text-left">
+                                            <a href="startup_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider navbar-login-session-bg"></li>
+                         
+            <li class="divider"></li>
+            <li><a href="#"><?php echo $userData['type'];?><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+            <li class="divider"></li>
+            
+            <li class="divider"></li>
+            
+            <li class="divider"></li>
+            <li><a href="login/userAccount.php?logoutSubmit=1" class="logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+                    </ul>
+                </li>
+            </ul>  
+
+				<?php }else{ ?>
+                <ul class="nav navbar-nav navbar-right" style="height:10px; margin-top: -7px">
+					<li class="dropdown"><a href="login/index.php"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+           
+					</li>
+				</ul>
+                <?php }?>    
+                    
+				</form>
+				
+				
+				
+				
+			</div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	<form style="display:none" id="form1"><h1 id="dis_user"></h1></form>
+<FORM id="form2" name="frmProduct" method="post" action="" style="display:none">
+ <div class="row">
+	<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="panel panel-primary" style="margin:20px;">
+				<div class="panel-heading" style="background-color:#99ccff; color: #fff">
+					<h3 class="panel-title" >Create your user profile </h3>
+				</div>
+        
+    
+			<div class="panel-body" >
+				<form method="post" action="">
+					<div style="color: black" >
+    
+					<div class= id="addblock">
+	
+						<div class="form-group">
+    
+							
+								<DIV id="outer">
+									<DIV id="header">
+									<DIV class="float-left">&nbsp;</DIV>
+									<DIV class="float-left col-heading"></DIV>
+									</DIV>
+
+    
+		<div class="form-group">
+            <label for="qualification">Qualification</label>
+            <input type="text" name="qualification"  id="qualification" required class="form-control input-sm"  placeholder="Add Your Qualification" />
+        </div>
+   
+    
+  
+    
+	    <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" name="city" id="city" required class="form-control input-sm"  placeholder="Add Your City" /> 
+        </div>
+		
+		<div class="search-box">
+			<input id="search_skill" autocomplete="off" placeholder="Search skill" />
+			<div class="result"></div>
+			<p id="demo"></p>
+		</div>
+		
+		<div class="search-box">
+			<input id="search_cert" autocomplete="off" placeholder="Search Certification" />
+			<div class="result1"></div>
+			<p id="demo2"></p>
+		</div>
+		
+		<div class="search-box">
+			<input id="search_sector" autocomplete="off" placeholder="Search Sector" />
+			<div class="result2"></div>
+			<p id="demo3"></p>
+		</div>
+		
+    
+
+</DIV>
+
+    
+</DIV>
+    <br><br><br>
+    <div class="form-group">
+		<input type="submit" style="background-color: #99ccff; color: black; width:100px; border-color:#99ccff" name="save" value="Submit" />
+
+	</div>
+    
+    
+</form>
+        
+    <br>
+        <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+        
+</div>
+   
+        </div>
+        </div></form></div></div></BODY>
+        
+		</div>
+		<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-6">
+					<div id="thumb_inv" class="thumbnail_inv">
+					
+	
+					</div>
+					<div id="thumb2" class="thumbnail2">
+					
+	
+					</div>
+				</div>
+				
+		</div>   
+	
+        
+         <footer>
+		<div class="footer-blurb" style="background-color:silver">
+			<div class="container" >
+				<div class="row" >
+					<div class="col-sm-4 footer-blurb-item">
+						
+					</div>
+					
+
+				</div>
+				<!-- /.row -->	
+			</div>
+        </div>
+        
+       
+	</footer>
+</HTML>

@@ -1,0 +1,294 @@
+<?php
+session_start();
+$sessData = !empty($_SESSION['sessData'])?$_SESSION['sessData']:'';
+if(!empty($sessData['status']['msg'])){
+    $statusMsg = $sessData['status']['msg'];
+    $statusMsgType = $sessData['status']['type'];
+    unset($_SESSION['sessData']['status']);
+}
+?>
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>News</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/log.css" rel="stylesheet">
+	<link href="css/style3.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->        
+    
+  <!-- jQuery -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- IE10 viewport bug workaround -->
+	<script src="js/ie10-viewport-bug-workaround.js"></script>
+	
+	<!-- Placeholder Images -->
+	<script src="js/holder.min.js"></script>  
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Logo and responsive toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="index.html" >Stories</a>
+                    </li>
+                    <li class="active">
+                        <a href="news.html">News</a>
+                    </li>
+                    <li>
+                        <a href="events.html">Events</a>
+                    </li>
+                   <li  >
+						<a href="search_companies.html">Profiles</a>
+                    </li>
+                    <li>
+                        <a href="investors.html" >Investor Corner</a>
+                    </li>
+                
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Get Involved  <span class="caret"></span></a>
+						<ul class="dropdown-menu" aria-labelledby="about-us">
+							
+							<li><a href="give_a_job.html">Find a teammate</a></li>
+							<li><a href="http://www.startupindia.gov.in/">Startup India</a></li>
+							
+						</ul>
+					</li>
+                </ul>
+		<!-- Search -->
+				<form class="navbar-form navbar-right" role="search">
+	
+                
+				<?php
+				if(!empty($sessData['userLoggedIn']) && !empty($sessData['userID'])){
+				include 'login/user.php';
+				$user = new User();
+				$conditions['where'] = array(
+					'id' => $sessData['userID'],
+				);
+				$conditions['return_type'] = 'single';
+				$userData = $user->getRows($conditions);
+				?>
+				<ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <strong><?php echo $userData['fname'];?></strong>
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="navbar-login">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p class="text-center">
+                                            <span class="glyphicon glyphicon-user icon-size"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-left"><strong><?php echo $userData['fname'].' '.$userData['lname']; ?></strong></p>
+                                        <p class="text-left small"><?php echo $userData['email']; ?></p>
+                                        
+										<?php if($userData['type']=="User"){?>
+										<p class="text-left">
+                                            <a href="user_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Investor"){?>
+										<p class="text-left">
+                                            <a href="investor_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+										<?php if($userData['type']=="Startup"){?>
+										<p class="text-left">
+                                            <a href="startup_profile.html" class="btn btn-primary btn-block btn-sm">Profile</a>
+										</p>
+											<?php }?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider navbar-login-session-bg"></li>
+                         
+          
+            <li><a href="#"><?php echo "You are logged in as ".$userData['type'];?><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+            
+            <li><a href="login/userAccount.php?logoutSubmit=1" class="logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+                    </ul>
+                </li>
+            </ul>  
+
+				<?php }else{ ?>
+                <ul class="nav navbar-nav navbar-right" style="height:10px; margin-top: -7px">
+					<li class="dropdown"><a href="login/index.php"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+           
+					</li>
+				</ul>
+                <?php }?>    
+                    
+				</form>
+			</div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	
+
+
+    <!-- Content -->
+    <div class="container">	
+    <div class="row">
+      <div class="col-md-5 col-md-offset-5">
+        <h1>NEWS</h1>
+      </div>
+    </div>
+	<hr class="style18">
+    <div class="row">
+      <div class="col-md-offset-2 col-md-5 col-xs-12">
+        <div class="card horizontal">
+          <div class="card-image">
+            <img src="images/57936353.cms.jpg">
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <a href="http://economictimes.indiatimes.com/small-biz/startups/yatra-com-launches-yatra-service-assurance-for-holiday-packages/articleshow/57936353.cmss" target="new_blank" ><h3 style="color:red;text-decoration:none;">Yatra.com launches 'Yatra Service Assurance' for holiday packages</h3></a>
+			  
+              <p>The feature also provides 100% refund, cancellation fee waiver, flexible check in and check out, free in-flight meals, seat of choice; at no extra cost and the customers will be assisted by a dedicated 24X7 concierge team.</p>
+              <hr>
+			  
+             </div>
+           </div>
+         </div>
+      </div>
+	  </div>
+	  <hr>
+	  <div class="row">
+	  <div class="col-md-offset-2 col-md-5 col-xs-12">
+        <div class="card horizontal">
+          <div class="card-image">
+            <img src="images/57945618.cms.jpg">
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <a href="http://economictimes.indiatimes.com/small-biz/startups/snapdeal-sounds-out-sbi-caps-kotak-capital-3-others-for-2019-ipo/articleshow/57945618.cms" target="new_blank" ><h3 style="color:red;text-decoration:none;">Snapdeal sounds out SBI Caps, Kotak Capital, 3 others for 2019 IPO</h3></a>
+			  
+              <p>It has also sounded out top law firms Amarchand Mangaldas, AZB & Partners and Khaitan & Co to advise it on the proposed share sale plan.</p>
+              
+             </div>
+           </div>
+         </div>
+      </div>
+
+     
+    </div>
+	<hr>
+	 <div class="row">
+	  <div class="col-md-offset-2 col-md-5 col-xs-12">
+        <div class="card horizontal">
+          <div class="card-image">
+            <img src="images/57943182.cms.jpg">
+			
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <a href="http://economictimes.indiatimes.com/small-biz/startups/fino-paytech-receives-final-approval-from-rbi-for-payments-bank/articleshow/57943182.cms" target="new_blank" ><h3 style="color:red;text-decoration:none;">Fino Paytech receives final approval from RBI for payments bank</h3></a>
+			  
+              <p>The company which till now was operating as a payments entity driving financial inclusion for banks had to reduce its foreign shareholding to less than 50% for the final clearance from the RBI.</p>
+              
+             </div>
+           </div>
+         </div>
+      </div>
+
+     
+    </div>
+	<hr>
+	<div class="row">
+	  <div class="col-md-offset-2 col-md-5 col-xs-12">
+        <div class="card horizontal">
+          <div class="card-image">
+            <img src="images/57949369.cms.jpg">
+			
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <a href="http://economictimes.indiatimes.com/small-biz/startups/how-a-bunch-of-healthcare-startups-is-tapping-unserved-niches/articleshow/57949369.cms" target="new_blank" ><h3 style="color:red;text-decoration:none;">How a bunch of healthcare startups is tapping unserved niches</h3></a>
+			  
+              <p>From answering a small query to understanding the patient’s complete requirement and initiating the treatment takes not more than 30 minutes, said Sumeet Khanna of Surgvisor.</p>
+              
+             </div>
+           </div>
+         </div>
+      </div>
+    </div>
+	<hr>
+	<div class="text-center">
+	 <ul class="pagination pagination-lg">
+	<li class="active"><a href="#">1</a></li>
+	<li><a href="news3.html">2</a></li>
+	<li><a href="#">3</a></li>
+	<li><a href="#">4</a></li>
+	<li><a href="#">5</a></li>
+</ul>
+</div>
+	</div>
+
+
+    
+    <!-- /.container -->
+	
+	<footer>
+		<div class="footer-blurb" style="background-color:silver">
+			<div class="container" >
+				<div class="row" >
+					<div class="col-sm-4 footer-blurb-item">
+						<div class="footter" > <a href="feed.html">Feedback</a> | <a href="about.html">About Us</a> | <a href="contact.html">Contact Us</a> </div>
+					</div>
+				</div>	
+			</div>
+        </div>
+	</footer>
+
+	
+
+	
+</body>
+
+</html>
